@@ -1,0 +1,1 @@
+angular.module('chart', ['nvd3', 'services']);

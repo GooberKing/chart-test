@@ -1,0 +1,37 @@
+<html lang="en" ng-app="chartTest">
+
+<head>
+    <meta charset="utf-8">
+    <title>Coding Challenge</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="../bower_components/nvd3/build/nv.d3.min.css">
+    <link rel="stylesheet" href="assets/app.css" />
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-resource/angular-resource.js"></script>
+    <script src="../bower_components/d3/d3.min.js"></script>
+    <script src="../bower_components/nvd3/build/nv.d3.min.js"></script>
+    <script src="../bower_components/angular-nvd3/dist/angular-nvd3.min.js"></script>
+    <script src="services/services.module.js"></script>
+    <script src="services/sales.service.js"></script>
+    <script src="chart/chart.module.js"></script>
+    <script src="chart/chart.controller.js"></script>
+    <script src="app.module.js"></script>
+</head>
+
+<body ng-controller="ChartController as chart">
+    <section id="chart-container">
+        <main>
+            <nvd3 options="chart.options" data="chart.model.data"></nvd3>
+        </main>
+        <aside>
+            <ul>
+                <li ng-repeat="option in chart.settings">
+                    <label>{{option.name}}</label>
+                    <select ng-model="chart.model[option.prop]" ng-options="value.value as value.name for value in option.values" ng-change="chart[option.onChange]()"></select>
+                </li>
+            </ul>
+        </aside>
+    </section>
+</body>
+
+</html>
