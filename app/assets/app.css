@@ -6,6 +6,7 @@ body {
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
+    background-color: #999;
 }
 
 #chart-container {
@@ -20,6 +21,7 @@ body {
     padding: 14px;
     font-family: 'Open Sans', Arial, sans-serif;
     font-size: 14px;
+    box-shadow: 2px 2px 25px #666;
 }
 
 #chart-container main {
