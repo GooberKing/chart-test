@@ -1,6 +1,8 @@
-angular.module('chart').controller('ChartController', ['$filter', 'SalesService', function ChartController($filter, SalesService) {
+// Controller for the chart that stores model data, chart options, and settings
+chartModule.controller('ChartController', ['$filter', 'SalesService', function ChartController($filter, SalesService) {
     var tempData = [];
 
+    // Data model
     this.model = {
         chartType: 'discreteBarChart',
         cohort: '',
@@ -9,6 +11,7 @@ angular.module('chart').controller('ChartController', ['$filter', 'SalesService'
         data: []
     };
 
+    // NVD3 Chart options
     this.options = {
         chart: {
             type: this.model.chartType,
@@ -36,6 +39,7 @@ angular.module('chart').controller('ChartController', ['$filter', 'SalesService'
         }
     }
 
+    // Settings drop-down lists
     this.settings = [
         {
             name: 'Chart Type',
@@ -80,6 +84,7 @@ angular.module('chart').controller('ChartController', ['$filter', 'SalesService'
         }
     ];
 
+    // Function for updating the chart settings
     this.updateChart = function() {
         this.formatData();
         
@@ -92,6 +97,7 @@ angular.module('chart').controller('ChartController', ['$filter', 'SalesService'
         this.options.chart.yAxis.axisLabel = $filter('filter')(statistics, {value: this.model.statistic})[0].name;
     };
 
+    // Function for updating the data set from the remove server
     this.updateData = function() {
         var self = this;
         SalesService.getData(this.model.statistic, this.model.cohort, function(data) {
@@ -101,6 +107,7 @@ angular.module('chart').controller('ChartController', ['$filter', 'SalesService'
         });
     };
 
+    // Function for sorting the data
     this.sortData = function() {
         var orderBy = this.model.orderBy;
         tempData.sort(function(a,b) {
@@ -119,11 +126,14 @@ angular.module('chart').controller('ChartController', ['$filter', 'SalesService'
         this.formatData();
     };
 
+    // Function for formatting the data based on the current chart type
     this.formatData = function() {
         switch(this.model.chartType) {
+            // Bar chart needs an array of objects with a key and values array
             case 'discreteBarChart':
                 this.model.data = [{key: this.model.cohort, values: tempData}];
                 break;
+            // Line chart needs a key and an array of x/y values
             case 'stackedAreaChart':
                 var modelData = [];
                 tempData.forEach(function(data) {
@@ -131,10 +141,12 @@ angular.module('chart').controller('ChartController', ['$filter', 'SalesService'
                 });
                 this.model.data = modelData;
                 break;
+            // Otherwise, just use the raw array of label/value pairs
             default:
                 this.model.data = tempData;
         }
     };
 
+    // Initialize the data set based on default settings
     this.updateData();
 }]);
