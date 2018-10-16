@@ -62,20 +62,32 @@ This document is intended to outline best practices around front-end development
 <div class="warning">Warning message</div>
 
 <!-- Best -->
-<!-- styles.css ---
+<!-- styles.css
 .warning {
     color: red;
 }
 -->
-<head>
-    <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-    <div class="warning">Warning message</div>
-</body>
+<html>
+    <head>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div class="warning">Warning message</div>
+    </body>
+</html>
 ```
 * Only use links (`a` elements) for actions that navigate users to another area of the application. Use `button` elements for all other actions (e.g. submitting forms, launching modals, etc.)
   - Do **not** use `img` elements to create clickable icons. Wrap the `img` with a `button` element instead, and put the action on the `button`.
+```html
+<!-- Bad -->
+<a href="javascript:void(0)" onclick="doSomething();">Do something</a>
+<img src="button-icon.png" onclick="doSomethingElse();" alt="Do something else" />
+
+<!-- Good -->
+<a href="somewhere.html">Go somewhere</a>
+<button type="button" onclick="doSomething();">Do something</button>
+<button type="button" onclick="doSomethingElse();"><img src="button-icon.png" alt="Do something else" /></button>
+```
 * All input fields (`input`, `select`, `textarea`, etc.) should have corresponding `label` elements with a defined `for` attribute and descriptive text
 ```html
 <div>
@@ -83,7 +95,7 @@ This document is intended to outline best practices around front-end development
     <input type="text" id="firstName" />
 </div>
 ```
-* Tables should have defined `thead` and `th` elements for each column, as well as a `tbody` elment and a `caption` element that describes what the data in the table represents
+* Tables should have defined `thead` and `th` elements for each column, as well as a `tbody` element and a `caption` element that describes what the data in the table represents
   - Use CSS to style or hide the caption as necessary (though not in a way that breaks screen readers -- see below)
 ```html
 <table>
