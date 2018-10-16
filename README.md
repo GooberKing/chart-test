@@ -57,47 +57,76 @@ color: #09c;
 
 * Use `const` when declaring variables, unless you need to reassign the value later, then use `let` instead. Never use `var` to declare variables.
 * Use literals to define complex structures (objects, arrays, etc.)
-```js
-const obj = {name: 'John Doe'};
-```
   - Don’t put quotes around property names. If the property name needs quotes because it is an invalid identifier, consider renaming the property.
-* Use the spread operator to create copies of objects
 ```js
-const obj1 = {name: 'John Doe'}; const obj2 = {...obj1};
+// Bad
+const obj = {'first-name': 'John', 'last-name': 'Doe'};
+
+// Good
+const obj = {firstName: 'John', lastName: 'Doe'};
+```
+* Use the spread operator to create copies of objects
+  - Use this pattern to override properties of the copied object
+```js
+const obj1 = {firstName: 'John', lastName: 'Doe'};
+
+// Create new object with {firstName: 'John', lastName: 'Smith'}
+const obj2 = {...obj1, lastName: 'Smith'};
 ```
 * Use `Array.push` to add elements to arrays instead of direct assignment
+* Use 'single quotes' for string values, unless it needs to preserve line breaks, then use template strings (i.e. \`backquotes\`)
+```
+// Create string 'Line 1\nLine 2'
+const twoLines = `Line 1
+Line 2`;
+```
+* Use template strings for concatenation
 * Use destructuring as much as possible
 ```js
 function getFullName({firstName, lastName}) {
-    return `${firstName} ${lastName}` 
+    return `${firstName} ${lastName}`; 
 }
-```
-* Use 'single quotes' for string values, unless it needs to preserve line breaks, then use template strings (i.e. \`backquotes\`)
-* Use template strings for concatenation
-```js
-`${firstName} ${lastName}`
+
+const obj = {firstName: 'John', lastName: 'Doe'};
+const fullName = getFullName(obj);
 ```
 * Never use `eval()`. Ever.
 * Use default parameter values in function definitions
-```js
-function counter(a = 0) { return a++; }
-```
   - Parameters without default values are considered required parameters and should be listed first in the parameter list
+```js
+function counter(a = 0) {
+    return a++;
+}
+```
 * Do not modify or reassign parameter values within functions
 * Use arrow notation for anonymous functions
 ```js
-[1, 2, 3].map((number, index) => `Value ${number} at index ${index}`);
+const verboseArray = [1, 2, 3].map((number, index) => `Value ${number} at index ${index}`);
 ```
 * Keep functions as small as possible. If you need to write a lot of lines of code for one function, consider breaking it up into smaller functions.
 ```js
 
 ```
 * Use `class` declarations to create objects instead of manipulating the prototype
-* List public class members before private ones in class definitions, and list properties before methods (i.e. the order should be public properties, private properties, public methods, private methods)
-* Leverage inheritance as much as possible by using extends
-* Consider returning this in class methods to enable chaining
+* List public class members before private ones in class definitions, and list properties before methods
+```js
+export class Member {
+    public firstName: string;
+	public lastName: string;
+	
+	private dateOfBirth: Date;
+	private ssn: number;
+	
+	public getSSN(): number { return ssn; }
+	public getAge(): number { return calcAge(); }
+	
+	private calcAge(): number { return moment().diff(dateOfBirth, 'years'); }
+}
+```
+* Leverage inheritance as much as possible by using `extends`
+* Consider returning `this` in class methods to enable chaining
 * Do not use wildcard `import` statements
-* Use functions like `map()`, `reduce()`, `filter()`, etc. to iterate over elements instead of `for` loops
+* Use Array methods like `map()`, `reduce()`, `filter()`, etc. to iterate over elements instead of `for` loops
 * Use `===` and `!==` for equality conditions instead of `==` or `!=`.
 * Don't nest ternary operators
 ```js
@@ -155,7 +184,7 @@ full-name.pipe.spec.ts
 * Services should be treated as singletons with a single responsibility (e.g. handling member information)
 * Use services to handle all data operations, such as API calls, data storage, etc.
 
---
+---
 ## Further reading
 Here are some other resources that provide more detailed guidelines for coding in general, and for Angular development in particular:
 
