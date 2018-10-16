@@ -344,8 +344,63 @@ function addMember(members: Member[], member: Member): Member[] {
 * Keep functions as small as possible. If you need to write a lot of lines of code for one function, consider breaking it up into smaller functions.
 ```js
 // Bad
-function doStuff() {
-	
+function getCollectionWeight(collection) {  
+    let collectionValues;
+    if (collection instanceof Array) {
+        collectionValues = collection;
+    } else if (collection instanceof Map) {
+        collectionValues = [...collection.values()];
+    } else {
+        collectionValues = Object.keys(collection).map(function (key) {
+            return collection[key];
+        });
+    }
+    return collectionValues.reduce(function(sum, item) {
+        if (item == null) {
+            return sum + 1;
+        } 
+        if (typeof item === 'object' || typeof item === 'function') {
+            return sum + 4;
+        }
+        return sum + 2;
+    }, 0);
+}
+
+// Good
+function getWeightByType(value) {  
+    const WEIGHT_NULL_UNDEFINED = 1;
+    const WEIGHT_PRIMITIVE = 2;
+    const WEIGHT_OBJECT_FUNCTION = 4;
+    if (value == null) {
+        return WEIGHT_NULL_UNDEFINED;
+    } 
+    if (typeof value === 'object' || typeof value === 'function') {
+        return WEIGHT_OBJECT_FUNCTION;
+    }
+    return WEIGHT_PRIMITIVE;
+}
+function getMapValues(map) {  
+    return [...map.values()];
+}
+function getPlainObjectValues(object) {  
+    return Object.keys(object).map(function (key) {
+        return object[key];
+    });
+}
+function getCollectionValues(collection) {  
+    if (collection instanceof Array) {
+        return collection;
+    }
+    if (collection instanceof Map) {
+        return getMapValues(collection);
+    }
+    return getPlainObjectValues(collection);
+}
+function reduceWeightSum(sum, item) {  
+    return sum + getWeightByType(item);
+}
+function getCollectionWeight(collection) {  
+    return getCollectionValues(collection).reduce(reduceWeightSum, 0);
 }
 ```
 * Use `class` declarations to create objects instead of manipulating the prototype
