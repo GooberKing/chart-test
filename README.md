@@ -24,7 +24,7 @@ This document is intended to outline best practices around front-end development
 
 <!-- Good -->
 <p>Paragraph Text
-<input type="text" name="firstName" value="John />
+    <input type="text" name="firstName" value="John />
 </p>
 ```
 * Use semantically correct HTML elements as much as possible (i.e. avoid using too many `div` or `span` elements)
@@ -36,8 +36,8 @@ This document is intended to outline best practices around front-end development
 
 <!-- Good -->
 <ol type="A">
-	<li>Item 1</li>
-	<li>Item 2</li>
+    <li>Item 1</li>
+    <li>Item 2</li>
 </ol>
 ```
 * Provide alt text for multimedia elements
@@ -62,7 +62,7 @@ This document is intended to outline best practices around front-end development
 <div class="warning">Warning message</div>
 
 <!-- Best -->
-<!-- styles.css --
+<!-- styles.css ---
 .warning {
     color: red;
 }
@@ -79,8 +79,8 @@ This document is intended to outline best practices around front-end development
 * All input fields (`input`, `select`, `textarea`, etc.) should have corresponding `label` elements with a defined `for` attribute and descriptive text
 ```html
 <div>
-	<label for="firstName">First name:</label>
-	<input type="text" id="firstName" />
+    <label for="firstName">First name:</label>
+    <input type="text" id="firstName" />
 </div>
 ```
 * Tables should have defined `thead` and `th` elements for each column, as well as a `tbody` elment and a `caption` element that describes what the data in the table represents
@@ -88,38 +88,39 @@ This document is intended to outline best practices around front-end development
 ```html
 <table>
     <caption>2017 Quarterback Statistics</caption>
-	<thead>
-		<tr>
-			<th>Name</th>
-			<th abbr="Completions">Comp</th>
-			<th abbr="Attempts">Att</th>
-			<th abbr="Touchdowns">TD</th>
-			<th abbr="Interceptions">Int</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>Tom Brady</td>
-			<td>385</td>
-			<td>581</td>
-			<td>32</td>
-			<td>8</td>
-		</tr>
-		<tr>
-			<td>Philip Rivers</td>
-			<td>360</td>
-			<td>575</td>
-			<td>28</td>
-			<td>10</td>
-		</tr>
-		<tr>
-			<td>Matthew Stafford</td>
-			<td>371</td>
-			<td>565</td>
-			<td>29</td>
-			<td>10</td>
-		</tr>
-	</tbody>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th abbr="Completions">Comp</th>
+            <th abbr="Attempts">Att</th>
+            <th abbr="Touchdowns">TD</th>
+            <th abbr="Interceptions">Int</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Tom Brady</td>
+            <td>385</td>
+            <td>581</td>
+            <td>32</td>
+            <td>8</td>
+        </tr>
+        <tr>
+            <td>Philip Rivers</td>
+            <td>360</td>
+            <td>575</td>
+            <td>28</td>
+            <td>10</td>
+        </tr>
+        <tr>
+            <td>Matthew Stafford</td>
+            <td>371</td>
+            <td>565</td>
+            <td>29</td>
+            <td>10</td>
+        </tr>
+    </tbody>
+</table>
 ```
 * Consider including WAI-ARIA attributes on elements to improve accessibility
 
