@@ -20,7 +20,7 @@ This document is intended to outline best practices around front-end development
 ```html
 <!-- Bad -->
 <P>Paragraph Text
-<INPUT TYPE=Text NAME=firstName VALUE=John>
+<INPUT TYPE=Text NAME='firstName' VALUE=John>
 
 <!-- Good -->
 <p>Paragraph Text
@@ -28,13 +28,99 @@ This document is intended to outline best practices around front-end development
 </p>
 ```
 * Use semantically correct HTML elements as much as possible (i.e. avoid using too many `div` or `span` elements)
+  - Use CSS to override browser default styles of semantic elements
+```html
+<!-- Bad -->
+<div>A. Item 1</div>
+<div>B. Item 2</div>
+
+<!-- Good -->
+<ol type="A">
+	<li>Item 1</li>
+	<li>Item 2</li>
+</ol>
+```
 * Provide alt text for multimedia elements
+```html
+<img src="test.png" alt="Test image" />
+```
 * Do **not** use style-based HTML elements (e.g. `center`, `br`, `u`, `i`, `font`, etc.)
+```html
+<!-- Bad -->
+<p>Here is some <i>emphasized text</i></p>
+
+<!-- Good -->
+<p>Here is some <em>emphasized text</em></p>
+```
 * Do **not** use inline CSS styles on elements
+```html
+<!-- Bad -->
+<div style="color: red;">Warning message</div>
+
+<!-- Better -->
+<style>.warning { color: red; }</style>
+<div class="warning">Warning message</div>
+
+<!-- Best -->
+<!-- styles.css --
+.warning {
+    color: red;
+}
+-->
+<head>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="warning">Warning message</div>
+</body>
+```
 * Only use links (`a` elements) for actions that navigate users to another area of the application. Use `button` elements for all other actions (e.g. submitting forms, launching modals, etc.)
   - Do **not** use `img` elements to create clickable icons. Wrap the `img` with a `button` element instead, and put the action on the `button`.
 * All input fields (`input`, `select`, `textarea`, etc.) should have corresponding `label` elements with a defined `for` attribute and descriptive text
-* Tables should have defined `thead` and `th` elements for each column, and a `caption` element that describes what the data in the table represents
+```html
+<div>
+	<label for="firstName">First name:</label>
+	<input type="text" id="firstName" />
+</div>
+```
+* Tables should have defined `thead` and `th` elements for each column, as well as a `tbody` elment and a `caption` element that describes what the data in the table represents
+  - Use CSS to style or hide the caption as necessary (though not in a way that breaks screen readers -- see below)
+```html
+<table>
+    <caption>2017 Quarterback Statistics</caption>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th abbr="Completions">Comp</th>
+			<th abbr="Attempts">Att</th>
+			<th abbr="Touchdowns">TD</th>
+			<th abbr="Interceptions">Int</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Tom Brady</td>
+			<td>385</td>
+			<td>581</td>
+			<td>32</td>
+			<td>8</td>
+		</tr>
+		<tr>
+			<td>Philip Rivers</td>
+			<td>360</td>
+			<td>575</td>
+			<td>28</td>
+			<td>10</td>
+		</tr>
+		<tr>
+			<td>Matthew Stafford</td>
+			<td>371</td>
+			<td>565</td>
+			<td>29</td>
+			<td>10</td>
+		</tr>
+	</tbody>
+```
 * Consider including WAI-ARIA attributes on elements to improve accessibility
 
 ### CSS
@@ -80,24 +166,24 @@ This document is intended to outline best practices around front-end development
 * Use `const` when declaring variables, unless you need to reassign the value later, then use `let` instead
   - Never use `var` to declare variables
 ```js
-	const defineOnce = 12;
-	let defineTwice = 13;
-	var defineVar = 14; // Bad
+const defineOnce = 12;
+let defineTwice = 13;
+var defineVar = 14; // Bad
 	
-	defineOnce = 23; // Bad
-	defineTwice = 34; // Good
+defineOnce = 23; // Bad
+defineTwice = 34; // Good
 ```
 * Use descriptive names for variables and functions, even in loops
 ```js
 // Bad
 const m = {fn: 'John', ln: 'Doe'};
 function addInAuth(ia) { /* .. */}
-for (let i=0; i<auths.length; i++ { /* .. */ }
+for (let i=0; i < auths.length; i++) { /* .. */ }
 
 // Good
 const member = {firstName: 'John', lastName: 'Doe'};
 function addInpatientAuthorization(inpatientAuth) { /* .. */ }
-for (let index=0; index<authorizations.length; index++) { /* .. */ }
+for (let index=0; index < authorizations.length; index++) { /* .. */ }
 ```
 * Use 'single quotes' for string values, unless it already contains single quotes or needs to preserve line breaks, then use template strings (i.e. \`backquotes\`)
 ```js
