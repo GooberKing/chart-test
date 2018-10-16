@@ -12,12 +12,25 @@ This document is intended to outline best practices around front-end development
 
 ### HTML
 
-* All elements, attributes, and values should be lowercase, unless the value represents text that is displayed to the user
+* Adhere to XHTML formatting rules
+  - All elements and attribute names must be lowercase
+  - All attribute values must have double quotes
+  - Non-empty elements require a closing tag
+  - Empty elements are terminated with a space and trailing slash
+```html
+<!-- Bad -->
+<P>Paragraph Text
+<INPUT TYPE=Text NAME=firstName VALUE=John>
+
+<!-- Good -->
+<p>Paragraph Text
+<input type="text" name="firstName" value="John />
+</p>
+```
 * Use semantically correct HTML elements as much as possible (i.e. avoid using too many `div` or `span` elements)
 * Provide alt text for multimedia elements
 * Do **not** use style-based HTML elements (e.g. `center`, `br`, `u`, `i`, `font`, etc.)
 * Do **not** use inline CSS styles on elements
-* Use "double quotes" around attribute values
 * Only use links (`a` elements) for actions that navigate users to another area of the application. Use `button` elements for all other actions (e.g. submitting forms, launching modals, etc.)
   - Do **not** use `img` elements to create clickable icons. Wrap the `img` with a `button` element instead, and put the action on the `button`.
 * All input fields (`input`, `select`, `textarea`, etc.) should have corresponding `label` elements with a defined `for` attribute and descriptive text
@@ -26,15 +39,20 @@ This document is intended to outline best practices around front-end development
 
 ### CSS
 
+* Always write selectors in multiple lines, even if it only has one property
 * Use `class` names in selectors as much as possible, rather than element names, IDs, or attribute selectors
 * Use hyphens to separate words in selector names
 * Use meaningful class and ID selector names, rather than presentational ones
 ```css
-.error-message { color: red; }
+.error-message {
+    color: red;
+}
 ```
 * Use namespacing in selector names to differentiate between apps, modules, components, etc.
 ```css
-.auth-inpatient-name { font-weight: 700; }
+.auth-inpatient-name {
+    font-weight: 700;
+}
 ```
 * Omit units and leading "0"s where possible
 ```css
@@ -61,6 +79,48 @@ This document is intended to outline best practices around front-end development
 
 * Use `const` when declaring variables, unless you need to reassign the value later, then use `let` instead
   - Never use `var` to declare variables
+```js
+	const defineOnce = 12;
+	let defineTwice = 13;
+	var defineVar = 14; // Bad
+	
+	defineOnce = 23; // Bad
+	defineTwice = 34; // Good
+```
+* Use descriptive names for variables and functions, even in loops
+```js
+// Bad
+const m = {fn: 'John', ln: 'Doe'};
+function addInAuth(ia) { /* .. */}
+for (let i=0; i<auths.length; i++ { /* .. */ }
+
+// Good
+const member = {firstName: 'John', lastName: 'Doe'};
+function addInpatientAuthorization(inpatientAuth) { /* .. */ }
+for (let index=0; index<authorizations.length; index++) { /* .. */ }
+```
+* Use 'single quotes' for string values, unless it already contains single quotes or needs to preserve line breaks, then use template strings (i.e. \`backquotes\`)
+```js
+// Bad
+const oneLine = "Some text";
+const apostropheLine = "Don't do this!";
+const twoLines = "Line 1\nLine 2";
+
+// Good
+const oneLine = 'Some text';
+const apostropheLine = `Don't do this!`;
+const twoLines = `Line 1
+Line 2`;
+```
+* Use template strings for concatenation
+```js
+// Bad
+const fullName = firstName + ' ' + lastName;
+const fullName = [firstName, lastName].join();
+
+// Good
+const fullName = `${firstName} ${lastName}`;
+```
 * Use literals to define complex structures (objects, arrays, etc.)
   - Don’t put quotes around property names. If the property name needs quotes because it is an invalid identifier, consider renaming the property.
 ```js
@@ -79,13 +139,6 @@ const obj1 = {firstName: 'John', lastName: 'Doe'};
 const obj2 = {...obj1, lastName: 'Smith'};
 ```
 * Use `Array.push` to add elements to arrays instead of direct assignment
-* Use 'single quotes' for string values, unless it needs to preserve line breaks, then use template strings (i.e. \`backquotes\`)
-```js
-// Create string 'Line 1\nLine 2'
-const twoLines = `Line 1
-Line 2`;
-```
-* Use template strings for concatenation
 * Use destructuring as much as possible
 ```js
 function getFullName({firstName, lastName}) {
