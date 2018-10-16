@@ -209,7 +209,7 @@ div[data-name="test"] { /*..*/ }
 @import url(https://www.google.com/css/maia.css);
 ```
 * Don't use `visibility: hidden` or `display: none` to temporarily hide elements on a page, as this will make those elements invisible to screen readers
-  - In these cases, use absolute positioning and clipping to move content off-screen instead.
+  - In these cases, use absolute positioning and clipping to collapse content instead.
 ```css
 /* Bad */
 .hide-element {
@@ -251,16 +251,20 @@ const member = {firstName: 'John', lastName: 'Doe'};
 function addInpatientAuthorization(inpatientAuth) { /* .. */ }
 for (let index=0; index < authorizations.length; index++) { /* .. */ }
 ```
-* Use 'single quotes' for string values, unless it already contains single quotes or needs to preserve line breaks, then use template strings (i.e. \`backquotes\`)
+* Use 'single quotes' for string values, not "double quotes"
+  - Escape single quotes in existing string values
+  - Use \`backquotes\` for strings that contain both types of quotes or need to preserve line breaks
 ```js
 // Bad
 const oneLine = "Some text";
 const apostropheLine = "Don't do this!";
+const mixedLine = "\"What's up?\" she asked.";
 const twoLines = "Line 1\nLine 2";
 
 // Good
 const oneLine = 'Some text';
-const apostropheLine = `Don't do this!`;
+const apostropheLine = 'Don\'t do this!';
+const mixedLine = `"What's up?" she asked.`;
 const twoLines = `Line 1
 Line 2`;
 ```
@@ -303,16 +307,25 @@ const fullName = getFullName(obj);
 * Never use `eval()`. Ever.
 * Use default parameter values in function definitions
   - Parameters without default values are considered required parameters and should be listed first in the parameter list
-```js
-function addNumbers(a, b = 0) {
-	if (typeof a === 'undefined') {
-	    alert('First number is required!');
-		return 0;
-	}
+```ts
+function addNumbers(a: number, b = 0): number {
     return a+b;
 }
 ```
 * Do not modify or reassign parameter values within functions
+```ts
+// Bad
+function addMember(members: Member[], member: Member) {
+	members.push(member);
+}
+
+// Good
+function addMember(members: Member[], member: Member): Member[] {
+	const newList = members;
+	newList.push(member);
+	return newList;
+}
+```
 * Use arrow notation for anonymous functions
 ```js
 const verboseArray = [1, 2, 3].map((number, index) => `Value ${number} at index ${index}`);
@@ -325,8 +338,31 @@ function doStuff() {
 }
 ```
 * Use `class` declarations to create objects instead of manipulating the prototype
+```ts
+// Bad
+function Member(firstName: string, lastName: string, ssn: number) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.ssn = ssn;
+}
+Member.prototype.getSSN = function(): number {
+    return this.ssn;
+};
+
+// Good
+class Member {
+    constructor(
+        public firstName,
+	    public lastName,
+	    private ssn,
+    ) { }
+    getSSN(): number {
+        return ssn;
+    }
+}
+```
 * List public class members before private ones in class definitions, and list properties before methods
-```js
+```ts
 export class Member {
     public firstName: string;
 	public lastName: string;
@@ -342,8 +378,53 @@ export class Member {
 ```
 * Leverage inheritance as much as possible by using `extends`
 * Consider returning `this` in class methods to enable chaining
+```ts
+// Bad
+class Member {
+    run(feet: number) { this.distance += feet; }
+	jump(feet: number) { this.height += feet; }
+}
+const member = new Member();
+member.run(10);
+member.jump(5);
+
+// Good
+class Member {
+    run(feet: number) {
+        this.distance += feet;
+        return this;
+    }
+    jump(feet: number) {
+        this.height += feet;
+        return this;
+    }
+}
+const member = new Member();
+member.run(10).jump(5);
+```
 * Do not use wildcard `import` statements
+```js
+// Bad
+import * as MemberComponent from './MemberComponent';
+
+// Good
+import MemberComponent from './MemberComponent';
+```
 * Use Array methods like `map()`, `reduce()`, `filter()`, etc. to iterate over elements instead of `for` loops
+```js
+const numbers = [1, 2, 3, 4, 5];
+
+// Bad
+let total = 0;
+for (let num of numbers) { total += num; }
+
+const numbersPlusOne = [];
+for (let index=0; index < numbers.length; index++) { numbersPlusOne.push(numbers[index] + 1); }
+
+// Good
+const total = numbers.reduce((total, num) => total + num, 0);
+const numbersPlusOne = numbers.map(num => num + 1);
+```
 * Use `===` and `!==` for equality conditions instead of `==` or `!=`.
 * Don't nest ternary operators
 ```js
