@@ -278,16 +278,18 @@ const fullName = [firstName, lastName].join();
 const fullName = `${firstName} ${lastName}`;
 ```
 * Use literals to define complex structures (objects, arrays, etc.)
-  - Don’t put quotes around property names. If the property name needs quotes because it is an invalid identifier, consider renaming the property.
+  - Don't put quotes around property names. If the property name needs quotes because it is an invalid identifier, consider renaming the property.
 ```js
 // Bad
-const obj = {'first-name': 'John', 'last-name': 'Doe'};
+const obj1 = new Object();
+const obj2 = {'first-name': 'John', 'last-name': 'Doe'};
 
 // Good
-const obj = {firstName: 'John', lastName: 'Doe'};
+const obj1 = {};
+const obj2 = {firstName: 'John', lastName: 'Doe'};
 ```
 * Use the spread operator to create copies of objects
-  - Use this pattern to override properties of the copied object
+  - Use this pattern to also override properties of the copied object
 ```js
 const obj1 = {firstName: 'John', lastName: 'Doe'};
 
@@ -295,6 +297,19 @@ const obj1 = {firstName: 'John', lastName: 'Doe'};
 const obj2 = {...obj1, lastName: 'Smith'};
 ```
 * Use `Array.push` to add elements to arrays instead of direct assignment
+```js
+const numbers = [1, 2, 3, 4, 5];
+
+// Bad
+numbers[numbers.length] = 6;
+
+// Good
+numbers.push(6);
+```
+* Use arrow notation for anonymous functions
+```js
+const verboseArray = [1, 2, 3].map((number, index) => `Value ${number} at index ${index}`);
+```
 * Use destructuring as much as possible
 ```js
 function getFullName({firstName, lastName}) {
@@ -316,19 +331,15 @@ function addNumbers(a: number, b = 0): number {
 ```ts
 // Bad
 function addMember(members: Member[], member: Member) {
-	members.push(member);
+    members.push(member);
 }
 
 // Good
 function addMember(members: Member[], member: Member): Member[] {
-	const newList = members;
-	newList.push(member);
-	return newList;
+    const newList = members;
+    newList.push(member);
+    return newList;
 }
-```
-* Use arrow notation for anonymous functions
-```js
-const verboseArray = [1, 2, 3].map((number, index) => `Value ${number} at index ${index}`);
 ```
 * Keep functions as small as possible. If you need to write a lot of lines of code for one function, consider breaking it up into smaller functions.
 ```js
@@ -353,8 +364,8 @@ Member.prototype.getSSN = function(): number {
 class Member {
     constructor(
         public firstName,
-	    public lastName,
-	    private ssn,
+        public lastName,
+        private ssn,
     ) { }
     getSSN(): number {
         return ssn;
@@ -365,15 +376,15 @@ class Member {
 ```ts
 export class Member {
     public firstName: string;
-	public lastName: string;
-	
-	private dateOfBirth: Date;
-	private ssn: number;
-	
-	public getSSN(): number { return ssn; }
-	public getAge(): number { return calcAge(); }
-	
-	private calcAge(): number { return moment().diff(dateOfBirth, 'years'); }
+    public lastName: string;
+
+    private dateOfBirth: Date;
+    private ssn: number;
+
+    public getSSN(): number { return ssn; }
+    public getAge(): number { return calcAge(); }
+
+    private calcAge(): number { return moment().diff(dateOfBirth, 'years'); }
 }
 ```
 * Leverage inheritance as much as possible by using `extends`
@@ -382,7 +393,7 @@ export class Member {
 // Bad
 class Member {
     run(feet: number) { this.distance += feet; }
-	jump(feet: number) { this.height += feet; }
+    jump(feet: number) { this.height += feet; }
 }
 const member = new Member();
 member.run(10);
@@ -447,11 +458,11 @@ ng generate component login
 inpatient-authorizations.service.ts
 ```
 * Angular element class names should be UpperCamelCase and end with the element type
-```js
+```ts
 export class InpatientAuthorizationComponent {}
 ```
 * Use kebab-case naming for element selector names with a custom app-specific prefix
-```js
+```ts
 @Component({
     selector: 'auth-outpatient-authorizations-list',
 })
@@ -466,16 +477,121 @@ full-name.pipe.spec.ts
 
 * All apps should have a root `AppModule` in the src/app folder
   - This module should only be used to define app-wide module properties such as imports, exports, declarations, providers, etc.
+```ts
+@NgModule({
+    imports: [
+        BrowserModule,
+    ],
+    declarations: [
+        AppComponent,
+        MemberComponent,
+    ],
+    exports: [ AppComponent ],
+})
+export class AppModule {}
+```
 * Each distinct feature should also have its own module defined
 * Consider collecting all reused elements, such as components, directives, and pipes, into a single `SharedModule`
   - Consider collecting all shared, single-use elements, like services, into a `CoreModule` and only import it into the `AppModule`.
+```
+src
+    app
+        core
+            core.module.ts
+            logger.service.ts
+        shared
+            shared.module.ts
+            full-name.pipe.ts
+            text-filter.service.ts
+        app.component.ts
+        app.module.ts
+    main.ts
+    index.html
+```
 
 ### Components
 
 * Do **not** embed templates or styles directly in components; move them into separate `.html` and `.css` files.
+```ts
+// Bad
+@Component({
+    selector: 'app-member',
+    template: `
+        <div class="member-container">
+            <h2>{{member | fullName}}</h2>
+        </div>
+    `,
+    styles: [`
+        .member-container { border: solid 1px red; }
+        .member-container h2 { color: blue; }
+    `],
+})
+export class MemberComponent implements OnInit { /*..*/ }
+
+// Good
+@Component({
+    selector: 'app-member',
+    templateUrl: './member.component.html',
+    styleUrls: ['./member.component.css'],
+})
+export class MemberComponent implements OnInit { /*..*/ }
+```
 * Component logic should only focus on rendering the view; move complex logic out into a service
-  - Put presentation logic (e.g. string formatting, calculations, etc.) in the component, not the template
+```ts
+// Bad
+getMembers() {
+    this.members = [];
+    this.http.get(getMembersUrl).pipe(
+        map((response: Response) => <Member[]>response.json().data),
+        catchError(this.catchBadResponse),
+        finalize(() => this.hideSpinner())
+    ).subscribe((members: Member[]) => this.members = members);
+}
+
+// Good
+getMembers() {
+    this.members = [];
+    this.memberService.getMembers().subscribe(members => this.members = members);
+}
+```
+* Put presentation logic (e.g. string formatting, calculations, etc.) in the component, not the template
+```ts
+// Bad
+@Component({
+    selector: 'app-auth-list',
+    template: `<div>Average cost: {{totalCost / auths.length}}</div>`,
+})
+export class AuthorizationListComponent {
+    auths: Authorization[];
+    totalCost: number;
+}
+
+// Good
+@Component({
+    selector: 'app-auth-list',
+    template: `<div>Average cost: {{averageCost}}</div>`,
+})
+export class AuthorizationListComponent {
+    auths: Authorization[];
+    totalCost: number;
+
+    get averageCost(): number {
+        return this.totalCost / auths.length;
+    }
+}
+```
 * Use attribute-based directives to handle presentation logic that does not require a template
+```ts
+@Directive({
+    selector: '[auth-focus]'
+})
+export class FocusDirective {
+    @HostListener('focus') onFocus() { /*..*/ }
+}
+```
+```html
+<div auth-focus>Focus on me!</div>
+```
 
 ### Services
 
