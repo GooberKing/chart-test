@@ -38,12 +38,16 @@ This document is intended to outline best practices around front-end development
 ```
 * Omit units and leading "0"s where possible
 ```css
-padding: 0;
-font-size: .8em;
+.helper-text {
+    padding: 0;
+    font-size: .8em;
+}
 ```
 * Use three-digit hexadecimal color codes where possible
 ```css
-color: #09c;
+.link-text {
+    color: #09c;
+}
 ```
 * Use 'single quotes' for attribute selectors and property values
   - Don’t use any quotes for URI values
@@ -55,7 +59,8 @@ color: #09c;
 
 ### JavaScript/TypeScript
 
-* Use `const` when declaring variables, unless you need to reassign the value later, then use `let` instead. Never use `var` to declare variables.
+* Use `const` when declaring variables, unless you need to reassign the value later, then use `let` instead
+  - Never use `var` to declare variables
 * Use literals to define complex structures (objects, arrays, etc.)
   - Don’t put quotes around property names. If the property name needs quotes because it is an invalid identifier, consider renaming the property.
 ```js
@@ -75,7 +80,7 @@ const obj2 = {...obj1, lastName: 'Smith'};
 ```
 * Use `Array.push` to add elements to arrays instead of direct assignment
 * Use 'single quotes' for string values, unless it needs to preserve line breaks, then use template strings (i.e. \`backquotes\`)
-```
+```js
 // Create string 'Line 1\nLine 2'
 const twoLines = `Line 1
 Line 2`;
@@ -94,8 +99,12 @@ const fullName = getFullName(obj);
 * Use default parameter values in function definitions
   - Parameters without default values are considered required parameters and should be listed first in the parameter list
 ```js
-function counter(a = 0) {
-    return a++;
+function addNumbers(a, b = 0) {
+	if (typeof a === 'undefined') {
+	    alert('First number is required!');
+		return 0;
+	}
+    return a+b;
 }
 ```
 * Do not modify or reassign parameter values within functions
@@ -105,7 +114,10 @@ const verboseArray = [1, 2, 3].map((number, index) => `Value ${number} at index 
 ```
 * Keep functions as small as possible. If you need to write a lot of lines of code for one function, consider breaking it up into smaller functions.
 ```js
-
+// Bad
+function doStuff() {
+	
+}
 ```
 * Use `class` declarations to create objects instead of manipulating the prototype
 * List public class members before private ones in class definitions, and list properties before methods
