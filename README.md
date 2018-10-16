@@ -9,6 +9,7 @@ This document is intended to outline best practices around front-end development
 * Make locating code intuitive and fast when building the application folder structure
 * Name files so that you can immediately tell what it contains
 * Keep a flat folder structure as much as possible
+* Be **consistent**!
 
 ### HTML
 
@@ -138,13 +139,42 @@ This document is intended to outline best practices around front-end development
 
 ### CSS
 
-* Always write selectors in multiple lines, even if it only has one property
-* Use `class` names in selectors as much as possible, rather than element names, IDs, or attribute selectors
 * Use hyphens to separate words in selector names
+```css
+/* Bad */
+.someClassName { /*..*/ }
+.SomeClassName { /*..*/ }
+.some_class_name { /*..*/ }
+
+/* Good */
+.some-class-name { /*..*/ }
+```
 * Use meaningful class and ID selector names, rather than presentational ones
 ```css
-.error-message {
-    color: red;
+/* Bad */
+.red-text { /*..*/ }
+
+/* Good */
+.error-message { /*..*/ }
+```
+* Use `class` names and IDs in selectors as much as possible, rather than element names or attribute selectors
+```css
+/* Bad */
+table tr td { /*..*/ }
+div[data-name="test"] { /*..*/ }
+
+/* Good */
+.member-data-cell { /*..*/ }
+#specificElement { /*..*/ }
+```
+* Always write selectors in multiple lines, even if it only has one property
+```css
+/* Bad */
+.member-name { font-weight: bold; }
+
+/* Good */
+.member-name {
+    font-weight: bold;
 }
 ```
 * Use namespacing in selector names to differentiate between apps, modules, components, etc.
@@ -160,8 +190,15 @@ This document is intended to outline best practices around front-end development
     font-size: .8em;
 }
 ```
-* Use three-digit hexadecimal color codes where possible
+* Use lowercase characters for hexadecimal values
+  - Use three-digit hexadecimal color codes where possible
 ```css
+/* Bad */
+.link-text {
+    color: #0099CC;
+}
+
+/* Good */
 .link-text {
     color: #09c;
 }
@@ -172,7 +209,23 @@ This document is intended to outline best practices around front-end development
 @import url(https://www.google.com/css/maia.css);
 ```
 * Don't use `visibility: hidden` or `display: none` to temporarily hide elements on a page, as this will make those elements invisible to screen readers
-  - In these cases, use absolute positioning or `height: 0` instead. This is especially useful for showing/hiding error messages.
+  - In these cases, use absolute positioning and clipping to move content off-screen instead.
+```css
+/* Bad */
+.hide-element {
+    display: none;
+    visibility: hidden;
+}
+
+/* Good */
+.hide-element {
+    position: absolute !important;
+    height: 1px;
+    width: 1px; 
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+}
+```
 
 ### JavaScript/TypeScript
 
